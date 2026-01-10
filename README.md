@@ -4,16 +4,17 @@
 2) Setup Tailwind CSS
 
 # FEATURES
--Browser
-  -Login/SignUp 
-    -Sign/SignUp Form
-    -Redirect to browse page
-  -Header
-  -Main Movie
-    -Trailer in background
-    -Title and description
-    -Movie Suggestion
-  -Netflic GPT 
-    -Search bar
-    -Movie Suggestion
+- Login/SignUp 
+    - Sign/SignUp Form
+    - Redirect to browse page
+- Browser (after authentication)
+    - Header
+    - Main Movie
+       - Trailer in background
+       - Title and description
+       - Movie Suggestion
+          - Movie List * n 
+- Netflic GPT 
+    - Search bar
+    - Movie Suggestion
 
