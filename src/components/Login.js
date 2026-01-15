@@ -1,25 +1,71 @@
-import { useState,useRef } from "react";
+import { useState, useRef } from "react";
 import Header from "./Header";
 import { checkValidData } from "../utils/validate";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth } from "../utils/firebase";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import  { addUser } from '../utils/userSlice';
 
 const Login = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [isSignUpForm, setIsSignUpForm] = useState(false)
   const [errorMessage, setErrorMessage] = useState("")
-  const name= useRef(null)
-  const email= useRef(null)
+  const name = useRef(null)
+  const email = useRef(null)
   const password = useRef(null)
 
   const handleToggleButton = () => {
     setIsSignUpForm(!isSignUpForm)
     setErrorMessage("")
     if (name.current) name.current.value = "";
-  if (email.current) email.current.value = "";
-  if (password.current) password.current.value = "";
+    if (email.current) email.current.value = "";
+    if (password.current) password.current.value = "";
   }
 
-  const handleSubmitButton = ()=>{
-    const message = checkValidData(name.current?.value, email.current?.value, password.current?.value,isSignUpForm)
+  const handleSubmitButton = () => {
+    let userName = name.current?.value;
+    let userEmail = email.current?.value;
+    let userPassword = password.current?.value;
+    const message = checkValidData(userName, userEmail, userPassword, isSignUpForm)
     setErrorMessage(message)
+    if (message) return;
+
+    if (isSignUpForm) {
+      //signUplogic
+      createUserWithEmailAndPassword(auth, userEmail, userPassword)
+        .then((userCredential) => {
+          // Signed up 
+          const user = userCredential.user;
+           updateProfile(user, {
+            displayName: name.current?.value
+          }).then(() => {
+            dispatch(addUser({uid: user.uid, name: user.displayName, email: user.email}));
+            navigate("/browse");
+          }).catch((error) => {
+            setErrorMessage(error.message);
+          });
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMessage(errorCode + "-" + errorMessage)
+        });
+    } else {
+      //signIn Logic
+      signInWithEmailAndPassword(auth, userEmail, userPassword)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          navigate("/browse");
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMessage(errorCode + "-" + errorMessage)
+        });
+
+    }
   }
   return (
     <div>
@@ -33,15 +79,15 @@ const Login = () => {
       <form onSubmit={(e) => e.preventDefault()} className="absolute w-3/12 p-12 text-white bg-black my-36 mx-auto right-0 left-0 rounded-lg bg-opacity-70">
         <h1 className="text-3xl font-bold my-4">{isSignUpForm ? "SignUp" : "Sign In"}</h1>
         {isSignUpForm && (
-          <input ref={name}type="text" placeholder='Full Name' className="p-4 my-4 w-full h-12 bg-gray-500" />)}
+          <input ref={name} type="text" placeholder='Full Name' className="p-4 my-4 w-full h-12 bg-gray-500" />)}
         <input
-          ref= {email}
+          ref={email}
           type="text"
           placeholder="Email"
           className="p-4 my-4 w-full h-12 bg-gray-500"
         />
         <input
-        ref={password}
+          ref={password}
           type="password"
           placeholder="Password"
           className="p-4 my-4 w-full h-12 bg-gray-500"
