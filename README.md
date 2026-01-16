@@ -1,13 +1,23 @@
 # NetFlix GPT Project 
-
-1) Creta react app
-2) Setup Tailwind CSS
-3) Implment Routing 
-4) Create the Sign/SignUp Form
-5) SetUp Firbase
-6) Add the sign /sign Up API 
-7) Deploy our app into fire base 
-8) 
+- Create react app
+- Setup tailwind css
+- Header
+- Routing of the app
+- Login Form 
+- SignUp Form 
+- Form Validation 
+- UseRef Hook
+- Firebase setup
+- Deploying our app to production
+- create signup user account
+- Implement signup user Api
+- Create Redux store with userSlice
+- Implement Sign out
+- Update Profile
+- BugFix:- Signup user  displayname 
+- Bug Fix :- If the useris not logged in redirect to browse to log in page and vice versa
+- Unsubscibed to the onAuthStateChanged callback
+- ' ?Add hardcoded values to the constants file
 
 # FEATURES
 - Login/SignUp 
